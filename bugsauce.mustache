@@ -1,0 +1,95 @@
+<div id="vimeography-gallery-{{gallery_id}}" class="vimeography-bugsauce" data-version="{{version}}"{{#gallery_width}} style="max-width: {{gallery_width}};"{{/gallery_width}}>
+
+	<div class="vimeography-main">
+    {{#featured}}
+    	<h2 class="vid-tit">{{name}}</h2>
+	    <div class="vimeography-player">
+	      {{{oembed}}}
+	    </div>
+	    <p class="vid-descr">{{description}}</p>
+    {{/featured}}
+	</div>
+
+	<div class="vimeography-thumbnails">
+		<ul class="vimeography-slides">
+			{{> videos}}
+		</ul>
+	</div>
+
+</div> <!-- End Gallery -->
+
+<script type="text/javascript">
+
+	(function($){
+
+		var replaceURLWithHTMLLinks = function(text) {
+			var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+			return text.replace(exp,"<a href='$1' target='_blank'>$1</a>");
+		}
+
+		$(document).ready(function() {
+
+			var $gallery = $('#vimeography-gallery-{{gallery_id}}');
+
+			$gallery.fitVids();
+
+			var slider = $gallery.find('.vimeography-thumbnails').flexslider({
+				animation: "slide",
+        		namespace: 'vimeography-bugsauce-',
+				controlNav: false,
+				animationLoop: false,
+				slideshow: false,
+				itemWidth: 186,
+				itemMargin: 8,
+				useCSS: false,
+				prevText: "<span></span>",
+				nextText: "<span></span>",
+				selector: ".vimeography-slides > li"
+			}).data('flexslider');
+
+			$gallery.find('.vimeography-thumbnails li').first().addClass('vimeography-bugsauce-active-slide');
+
+			$gallery.on('click', '.vimeography-thumbnails li', function(e){
+				var $this = $('img', this);
+				$gallery.find('.vimeography-main').spin('custom');
+
+				var link = $this.data('link');
+
+				var tit = $this.data('title');
+				var descr = $this.data('description');
+
+				$('#vimeography-gallery-{{gallery_id}} .vid-tit').animate({'opacity':0}, 300, 'linear', function(){
+					$(this).html(tit);
+					$(this).animate({'opacity':1}, 300);
+				});
+				$('#vimeography-gallery-{{gallery_id}} .vid-descr').animate({'opacity':0}, 300, 'linear', function(){
+					$(this).html(replaceURLWithHTMLLinks(descr));
+					$(this).animate({'opacity':1}, 300);
+				});
+
+				$('.vimeography-bugsauce-active-slide').removeClass('vimeography-bugsauce-active-slide');
+				$(this).addClass('vimeography-bugsauce-active-slide');
+
+				$gallery.find('.vimeography-player').animate({'opacity':0}, 300, 'linear', function(){
+
+					var promise = vimeography.utilities.get_video( link );
+
+		      promise.done(function (video) {
+						$gallery.find('.vimeography-player').html(video.html).fitVids().animate({'opacity':1}, 300);
+						$gallery.find('.vimeography-main').spin(false);
+
+		      });
+
+				});
+
+    		e.preventDefault();
+			});
+
+		});
+	})(jQuery)
+
+</script>
+
+{{#paging}}
+	{{>paging}}
+{{/paging}}
