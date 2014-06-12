@@ -29,6 +29,8 @@
 
 		$(document).ready(function() {
 
+			$('#vimeography-gallery-{{gallery_id}} .vid-descr').html(replaceURLWithHTMLLinks($('#vimeography-gallery-{{gallery_id}} .vid-descr').html()));
+
 			var $gallery = $('#vimeography-gallery-{{gallery_id}}');
 
 			$gallery.fitVids();
