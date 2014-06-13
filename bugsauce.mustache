@@ -29,7 +29,7 @@
 
 		$(document).ready(function() {
 
-			$('#vimeography-gallery-{{gallery_id}} .vid-descr').html(replaceURLWithHTMLLinks($('#vimeography-gallery-{{gallery_id}} .vid-descr').html()));
+			$('#vimeography-gallery-{{gallery_id}} .vimeography-main .vid-descr').html(replaceURLWithHTMLLinks($('#vimeography-gallery-{{gallery_id}} .vimeography-main .vid-descr').html()));
 
 			var $gallery = $('#vimeography-gallery-{{gallery_id}}');
 
@@ -65,7 +65,8 @@
 					$(this).animate({'opacity':1}, 300);
 				});
 				$('#vimeography-gallery-{{gallery_id}} .vid-descr').animate({'opacity':0}, 300, 'linear', function(){
-					$(this).html(replaceURLWithHTMLLinks(descr));
+					// $(this).html(replaceURLWithHTMLLinks(descr));
+					$(this).html(descr);
 					$(this).animate({'opacity':1}, 300);
 				});
 
